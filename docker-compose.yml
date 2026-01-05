@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: docuvault-db
+    environment:
+      POSTGRES_USER: docuvault
+      POSTGRES_PASSWORD: docuvault
+      POSTGRES_DB: docuvault
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    container_name: docuvault-backend
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://docuvault:docuvault@db:5432/docuvault
+    ports:
+      - "8000:8000"
+
+volumes:
+  postgres_data:
